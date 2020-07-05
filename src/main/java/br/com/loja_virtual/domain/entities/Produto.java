@@ -35,10 +35,6 @@ public class Produto {
     @NotNull(message = "O valor do produto não pode ser nulo")
     private BigDecimal valor;
 
-    @NotNull(message = "O SKU do produto não poder nulo")
-    @Column(unique = true)
-    private String sku;
-
     @Builder.Default
     private ESimNao disponivel = ESimNao.SIM;
 
@@ -83,14 +79,6 @@ public class Produto {
 
     public void setValor(BigDecimal valor) {
         this.valor = valor;
-    }
-
-    public String getSku() {
-        return sku;
-    }
-
-    public void setSku(String sku) {
-        this.sku = sku;
     }
 
     public ESimNao getDisponivel() {
