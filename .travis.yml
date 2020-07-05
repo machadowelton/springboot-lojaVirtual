@@ -5,7 +5,4 @@ deploy:
  provider: heroku
  api-key: 
   secure: $HEROKU_API_KEY  
- run:
-    - "chmod +x mvn*"
-    - "./mvnw package -DskipTests=true"
  app: sb-lojavirtual
