@@ -25,12 +25,14 @@ public class Usuario {
     private Long id;
 
     @Email(message = "O nome de usuário precisa ser um e-mail")
+    @Column(unique = true)
     private String nome;
 
     @NotNull(message = "A senha não pode ser nula")
     private String senha;
 
     @ManyToMany(mappedBy = "usuarios", fetch = FetchType.EAGER)
+    @Builder.Default
     private Set<Funcao> funcoes = new HashSet<>();
 
     public Long getId() {
