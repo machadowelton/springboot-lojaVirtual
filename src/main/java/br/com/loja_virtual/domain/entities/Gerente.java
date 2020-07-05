@@ -30,9 +30,11 @@ public class Gerente {
     private LocalDate dataNascimento;
 
     @NotNull(message = "O cpf do gerente não poder nulo")
+    @Column(unique = true)
     private String cpf;
 
     @Email(message = "O email do gerente tem que ser válido e não nulo")
+    @Column(unique = true)
     private String email;
 
     @OneToOne(fetch = FetchType.LAZY)

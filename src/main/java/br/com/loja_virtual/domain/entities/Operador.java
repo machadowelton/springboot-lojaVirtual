@@ -30,9 +30,11 @@ public class Operador {
     private LocalDate dataNascimento;
 
     @NotNull(message = "O cpf do operador não poder nulo")
+    @Column(unique = true)
     private String cpf;
 
     @Email(message = "O email do operador tem que ser válido e não nulo")
+    @Column(unique = true)
     private String email;
 
     @OneToOne(fetch = FetchType.LAZY)
