@@ -1,0 +1,10 @@
+language: java
+jdk:
+ - openjdk8
+deploy:
+ provider: heroku
+ api-key: 
+  secure: $HEROKU_API_KEY  
+ run:
+    - "./mvnw package -DskipTests=true"
+ app: sb-lojavirtual
