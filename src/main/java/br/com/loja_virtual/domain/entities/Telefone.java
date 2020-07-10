@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "telefones")
@@ -18,7 +17,7 @@ public class Telefone {
 
     @Id
     @GeneratedValue(
-            strategy= GenerationType.AUTO,
+            strategy= GenerationType.IDENTITY,
             generator="native"
     )
     private Long id;
@@ -30,10 +29,6 @@ public class Telefone {
     private String ddd;
 
     private String numero;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_consumidor", referencedColumnName = "id")
-    private Consumidor consumidor;
 
     public Long getId() {
         return id;
@@ -75,11 +70,38 @@ public class Telefone {
         this.numero = numero;
     }
 
-    public Consumidor getConsumidor() {
-        return consumidor;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Telefone)) return false;
+
+        Telefone telefone = (Telefone) o;
+
+        if (id != null ? !id.equals(telefone.id) : telefone.id != null) return false;
+        if (principal != telefone.principal) return false;
+        if (tipoUso != telefone.tipoUso) return false;
+        if (ddd != null ? !ddd.equals(telefone.ddd) : telefone.ddd != null) return false;
+        return numero != null ? numero.equals(telefone.numero) : telefone.numero == null;
     }
 
-    public void setConsumidor(Consumidor consumidor) {
-        this.consumidor = consumidor;
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (principal != null ? principal.hashCode() : 0);
+        result = 31 * result + (tipoUso != null ? tipoUso.hashCode() : 0);
+        result = 31 * result + (ddd != null ? ddd.hashCode() : 0);
+        result = 31 * result + (numero != null ? numero.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Telefone(" +
+                "id=" + id +
+                ", principal=" + principal +
+                ", tipoUso=" + tipoUso +
+                ", ddd=" + ddd +
+                ", numero=" + numero +
+                ')';
     }
 }

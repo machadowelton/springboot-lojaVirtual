@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,7 +20,7 @@ public class Consumidor {
 
     @Id
     @GeneratedValue(
-            strategy= GenerationType.AUTO,
+            strategy= GenerationType.IDENTITY,
             generator="native"
     )
     private Long id;
@@ -41,12 +40,14 @@ public class Consumidor {
     private String email;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    @OneToMany(mappedBy = "consumidor", fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_consumidor")
     @Builder.Default
     private Set<Telefone> telefones = new HashSet<>();
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    @OneToMany(mappedBy = "consumidor", fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_consumidor")
     @Builder.Default
     private Set<Endereco> enderecos = new HashSet<>();
 
@@ -116,5 +117,50 @@ public class Consumidor {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Consumidor)) return false;
+
+        Consumidor that = (Consumidor) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (nomeCompleto != null ? !nomeCompleto.equals(that.nomeCompleto) : that.nomeCompleto != null) return false;
+        if (dataNascimento != null ? !dataNascimento.equals(that.dataNascimento) : that.dataNascimento != null)
+            return false;
+        if (cpf != null ? !cpf.equals(that.cpf) : that.cpf != null) return false;
+        if (email != null ? !email.equals(that.email) : that.email != null) return false;
+        if (telefones != null ? !telefones.equals(that.telefones) : that.telefones != null) return false;
+        if (enderecos != null ? !enderecos.equals(that.enderecos) : that.enderecos != null) return false;
+        return usuario != null ? usuario.equals(that.usuario) : that.usuario == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (nomeCompleto != null ? nomeCompleto.hashCode() : 0);
+        result = 31 * result + (dataNascimento != null ? dataNascimento.hashCode() : 0);
+        result = 31 * result + (cpf != null ? cpf.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (telefones != null ? telefones.hashCode() : 0);
+        result = 31 * result + (enderecos != null ? enderecos.hashCode() : 0);
+        result = 31 * result + (usuario != null ? usuario.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Consumidor(" +
+                "id=" + id +
+                ", nomeCompleto=" + nomeCompleto +
+                ", dataNascimento=" + dataNascimento +
+                ", cpf=" + cpf +
+                ", email=" + email +
+                ", telefones=" + telefones +
+                ", enderecos=" + enderecos +
+                ", usuario=" + usuario +
+                ')';
     }
 }

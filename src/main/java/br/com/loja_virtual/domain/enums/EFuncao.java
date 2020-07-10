@@ -6,7 +6,7 @@ public enum EFuncao {
     OPERADOR("OPERADOR"),
     CONSUMIDOR("CONSUMIDOR");
 
-    private final String funcao;
+    private String funcao;
 
     EFuncao(String funcao) {
         this.funcao = funcao;

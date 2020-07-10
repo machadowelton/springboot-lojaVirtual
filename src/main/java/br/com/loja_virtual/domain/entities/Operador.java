@@ -18,7 +18,7 @@ public class Operador {
 
     @Id
     @GeneratedValue(
-            strategy= GenerationType.AUTO,
+            strategy= GenerationType.IDENTITY,
             generator="native"
     )
     private Long id;
@@ -87,5 +87,45 @@ public class Operador {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Operador)) return false;
+
+        Operador operador = (Operador) o;
+
+        if (id != null ? !id.equals(operador.id) : operador.id != null) return false;
+        if (nomeCompleto != null ? !nomeCompleto.equals(operador.nomeCompleto) : operador.nomeCompleto != null)
+            return false;
+        if (dataNascimento != null ? !dataNascimento.equals(operador.dataNascimento) : operador.dataNascimento != null)
+            return false;
+        if (cpf != null ? !cpf.equals(operador.cpf) : operador.cpf != null) return false;
+        if (email != null ? !email.equals(operador.email) : operador.email != null) return false;
+        return usuario != null ? usuario.equals(operador.usuario) : operador.usuario == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (nomeCompleto != null ? nomeCompleto.hashCode() : 0);
+        result = 31 * result + (dataNascimento != null ? dataNascimento.hashCode() : 0);
+        result = 31 * result + (cpf != null ? cpf.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (usuario != null ? usuario.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Operador(" +
+                "id=" + id +
+                ", nomeCompleto=" + nomeCompleto +
+                ", dataNascimento=" + dataNascimento +
+                ", cpf=" + cpf +
+                ", email=" + email +
+                ", usuario=" + usuario +
+                ')';
     }
 }

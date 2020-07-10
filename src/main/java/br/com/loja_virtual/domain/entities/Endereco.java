@@ -18,7 +18,7 @@ public class Endereco {
 
     @Id
     @GeneratedValue(
-            strategy= GenerationType.AUTO,
+            strategy= GenerationType.IDENTITY,
             generator="native"
     )
     private Long id;
@@ -47,10 +47,6 @@ public class Endereco {
 
     @NotNull(message = "O estado(uf) do endereco não pode ser nulo")
     private String estado;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_consumidor", referencedColumnName = "id")
-    private Consumidor consumidor;
 
     public Long getId() {
         return id;
@@ -140,11 +136,57 @@ public class Endereco {
         this.estado = estado;
     }
 
-    public Consumidor getConsumidor() {
-        return consumidor;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Endereco)) return false;
+
+        Endereco endereco = (Endereco) o;
+
+        if (id != null ? !id.equals(endereco.id) : endereco.id != null) return false;
+        if (principal != endereco.principal) return false;
+        if (tipoEndereco != endereco.tipoEndereco) return false;
+        if (logradouro != null ? !logradouro.equals(endereco.logradouro) : endereco.logradouro != null) return false;
+        if (numero != null ? !numero.equals(endereco.numero) : endereco.numero != null) return false;
+        if (complemnto != null ? !complemnto.equals(endereco.complemnto) : endereco.complemnto != null) return false;
+        if (cep != null ? !cep.equals(endereco.cep) : endereco.cep != null) return false;
+        if (pontoReferencia != null ? !pontoReferencia.equals(endereco.pontoReferencia) : endereco.pontoReferencia != null)
+            return false;
+        if (bairro != null ? !bairro.equals(endereco.bairro) : endereco.bairro != null) return false;
+        if (cidade != null ? !cidade.equals(endereco.cidade) : endereco.cidade != null) return false;
+        return estado != null ? estado.equals(endereco.estado) : endereco.estado == null;
     }
 
-    public void setConsumidor(Consumidor consumidor) {
-        this.consumidor = consumidor;
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (principal != null ? principal.hashCode() : 0);
+        result = 31 * result + (tipoEndereco != null ? tipoEndereco.hashCode() : 0);
+        result = 31 * result + (logradouro != null ? logradouro.hashCode() : 0);
+        result = 31 * result + (numero != null ? numero.hashCode() : 0);
+        result = 31 * result + (complemnto != null ? complemnto.hashCode() : 0);
+        result = 31 * result + (cep != null ? cep.hashCode() : 0);
+        result = 31 * result + (pontoReferencia != null ? pontoReferencia.hashCode() : 0);
+        result = 31 * result + (bairro != null ? bairro.hashCode() : 0);
+        result = 31 * result + (cidade != null ? cidade.hashCode() : 0);
+        result = 31 * result + (estado != null ? estado.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Endereco(" +
+                "id=" + id +
+                ", principal=" + principal +
+                ", tipoEndereco=" + tipoEndereco +
+                ", logradouro=" + logradouro +
+                ", numero=" + numero +
+                ", complemnto=" + complemnto +
+                ", cep=" + cep +
+                ", pontoReferencia=" + pontoReferencia +
+                ", bairro=" + bairro +
+                ", cidade=" + cidade +
+                ", estado=" + estado +
+                ')';
     }
 }

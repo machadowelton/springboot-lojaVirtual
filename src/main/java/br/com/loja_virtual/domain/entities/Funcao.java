@@ -1,15 +1,14 @@
 package br.com.loja_virtual.domain.entities;
 
 import br.com.loja_virtual.domain.enums.EFuncao;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import br.com.loja_virtual.domain.enums.EGenero;
+import br.com.loja_virtual.domain.enums.ESimNao;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "funcoes")
@@ -20,25 +19,16 @@ public class Funcao {
 
     @Id
     @GeneratedValue(
-            strategy= GenerationType.AUTO,
+            strategy= GenerationType.IDENTITY,
             generator="native"
     )
     private Long id;
 
-    @NotNull(message = "O nome da função não pode ser nula")
+    @NotNull(message = "O nome da função é obrigatório")
     @Enumerated(EnumType.STRING)
-    @Column(unique = true)
     private EFuncao nome;
 
-    @ManyToMany
-    @JoinTable(
-            name = "funcoes_usuarios",
-            joinColumns = @JoinColumn(name = "id_usuario", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id_funcao", referencedColumnName = "id")
-    )
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    @Builder.Default
-    private Set<Usuario> usuarios = new HashSet<>();
+    private String descricao;
 
     public Long getId() {
         return id;
@@ -56,11 +46,40 @@ public class Funcao {
         this.nome = nome;
     }
 
-    public Set<Usuario> getUsuarios() {
-        return usuarios;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setUsuarios(Set<Usuario> usuarios) {
-        this.usuarios = usuarios;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Funcao)) return false;
+
+        Funcao funcao = (Funcao) o;
+
+        if (id != null ? !id.equals(funcao.id) : funcao.id != null) return false;
+        if (nome != funcao.nome) return false;
+        return descricao != null ? descricao.equals(funcao.descricao) : funcao.descricao == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (nome != null ? nome.hashCode() : 0);
+        result = 31 * result + (descricao != null ? descricao.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Funcao(" +
+                "id=" + id +
+                ", nome=" + nome +
+                ", descricao=" + descricao +
+                ')';
     }
 }
