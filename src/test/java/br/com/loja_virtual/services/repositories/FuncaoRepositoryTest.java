@@ -56,14 +56,34 @@ class FuncaoRepositoryTest {
                                 .descricao("Menor nivel")
                                 .build()
                 );
-        testEntityManager.persist(funcoesParaSalvar.get(0));
-        testEntityManager.persist(funcoesParaSalvar.get(1));
-        testEntityManager.persist(funcoesParaSalvar.get(2));
+        funcoesParaSalvar.stream().forEach(testEntityManager::persist);
         List<EFuncao> nomesFuncoes = funcoesParaSalvar.stream().map(m -> m.getNome()).collect(Collectors.toList());
         List<Funcao> funcoesRetornoConsulta = funcaoRepository.findByNomeIn(nomesFuncoes);
         assertThat(funcoesRetornoConsulta).isNotEmpty();
-        assertThat(funcoesRetornoConsulta.size()).isEqualTo(3);
+        assertThat(funcoesRetornoConsulta.size()).isEqualTo(funcoesParaSalvar.size());
         assertThat(funcoesRetornoConsulta.equals(funcoesParaSalvar)).isTrue();
+    }
+
+
+    @Test
+    @DisplayName("Deve retornar uma lista vazia")
+    void findByNomeInEmptyListTest() {
+        List<Funcao> funcoesParaSalvar =
+                Arrays.asList(
+                        Funcao.builder()
+                                .nome(EFuncao.GERENTE)
+                                .descricao("Maior nivel")
+                                .build(),
+                        Funcao.builder()
+                                .nome(EFuncao.OPERADOR)
+                                .descricao("Nivel intermediário")
+                                .build()
+                );
+        funcoesParaSalvar.stream().forEach(testEntityManager::persist);
+        List<EFuncao> nomesFuncoes = Arrays.asList(EFuncao.CONSUMIDOR);
+        List<Funcao> funcoesRetornoConsulta = funcaoRepository.findByNomeIn(nomesFuncoes);
+        assertThat(funcoesRetornoConsulta).isNotNull();
+        assertThat(funcoesRetornoConsulta).isEmpty();
     }
 
 }

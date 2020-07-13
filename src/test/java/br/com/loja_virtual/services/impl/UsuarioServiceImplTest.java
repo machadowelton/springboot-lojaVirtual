@@ -4,10 +4,7 @@ import br.com.loja_virtual.domain.entities.Funcao;
 import br.com.loja_virtual.domain.entities.Usuario;
 import br.com.loja_virtual.domain.enums.EFuncao;
 import br.com.loja_virtual.domain.enums.ESimNao;
-import br.com.loja_virtual.domain.exceptions.CombinacaoUsuarioSenhaNaoValidaException;
-import br.com.loja_virtual.domain.exceptions.NomeUsuarioEmUsoException;
-import br.com.loja_virtual.domain.exceptions.SenhaNovaEConfirmacaoNaoCombinamException;
-import br.com.loja_virtual.domain.exceptions.UsuarioSemFuncaoException;
+import br.com.loja_virtual.domain.exceptions.*;
 import br.com.loja_virtual.services.IFuncaoService;
 import br.com.loja_virtual.services.IUsuarioService;
 import br.com.loja_virtual.services.repositories.UsuarioRepository;
@@ -21,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import javax.swing.text.html.Option;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -249,10 +247,68 @@ class UsuarioServiceImplTest {
     }
 
     @Test
-    void desabilitar() {
+    @DisplayName("Deve retornar um erro UsuarioNaoEncontradoException quando não encontrado pelo id")
+    void desabilitarUsuarioNaoEncontradoTest() {
+        Long idUsuarioConsulta = 1l;
+        String mensagemException = "Nenhum usuário encontrado pelo id: " + idUsuarioConsulta;
+        when(usuarioRepositoryMock.findById(idUsuarioConsulta)).thenReturn(Optional.empty());
+        Throwable throwable = catchThrowable(() -> usuarioService.desabilitar(idUsuarioConsulta));
+        verify(usuarioRepositoryMock, never()).save(any());
+        assertThat(throwable).isInstanceOf(UsuarioNaoEncontradoException.class);
+        assertThat(throwable.getMessage()).isEqualTo(mensagemException);
     }
 
     @Test
-    void habilitar() {
+    @DisplayName("Deve desabilitar um usuario")
+    void desabilitarTest() {
+        Long idUsuarioConsulta = 1l;
+        Usuario usuarioConsultaMock =
+                Usuario.builder()
+                        .id(idUsuarioConsulta)
+                        .nome("email@mail.com")
+                        .ativo(ESimNao.SIM)
+                        .build();
+        when(usuarioRepositoryMock.findById(idUsuarioConsulta)).thenReturn(Optional.of(usuarioConsultaMock));
+        usuarioService.desabilitar(idUsuarioConsulta);
+        Usuario usuarioDesabilitado =
+                Usuario.builder()
+                        .id(idUsuarioConsulta)
+                        .nome(usuarioConsultaMock.getNome())
+                        .ativo(ESimNao.NAO)
+                        .build();
+        verify(usuarioRepositoryMock, times(1)).save(usuarioDesabilitado);
+    }
+
+    @Test
+    @DisplayName("Deve retornar um erro UsuarioNaoEncontradoException quando não encontrar o usuário pelo id")
+    void habilitarUsuarioNaoEncontradoTest() {
+        Long idUsuarioConsulta = 1l;
+        String mensagemException = "Nenhum usuário encontrado pelo id: " + idUsuarioConsulta;
+        when(usuarioRepositoryMock.findById(idUsuarioConsulta)).thenReturn(Optional.empty());
+        Throwable throwable = catchThrowable(() -> usuarioService.habilitar(idUsuarioConsulta));
+        verify(usuarioRepositoryMock, never()).save(any());
+        assertThat(throwable).isInstanceOf(UsuarioNaoEncontradoException.class);
+        assertThat(throwable.getMessage()).isEqualTo(mensagemException);
+    }
+
+    @Test
+    @DisplayName("Deve habilitar um usuário")
+    void habilitarTest() {
+        Long idUsuarioConsulta = 1l;
+        Usuario usuarioConsultaMock =
+                Usuario.builder()
+                        .id(idUsuarioConsulta)
+                        .nome("email@mail.com")
+                        .ativo(ESimNao.NAO)
+                        .build();
+        when(usuarioRepositoryMock.findById(idUsuarioConsulta)).thenReturn(Optional.of(usuarioConsultaMock));
+        usuarioService.habilitar(idUsuarioConsulta);
+        Usuario usuarioHabilitado =
+                Usuario.builder()
+                        .id(idUsuarioConsulta)
+                        .nome(usuarioConsultaMock.getNome())
+                        .ativo(ESimNao.SIM)
+                        .build();
+        verify(usuarioRepositoryMock, times(1)).save(usuarioHabilitado);
     }
 }
